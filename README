@@ -1,0 +1,10 @@
+ELDOG-WRANGLER v0.1.0
+
+Eldog Wrangler is a build planning app for Elden Ring for android. While still in 
+very early development, I plan to make a fully featured build maker app that will
+allow people to make and save builds, as well as include a map feature to
+see the locations of items and plan their route through the game.
+
+CREDITS
+Thanks to deliton for their open source Elden Ring Api found at:
+https://github.com/deliton/eldenring-api

@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Eldog Wrangler</string>
+    <string name="title">Build Planner</string>
+    <string name="vig">Vigor</string>
+    <string name="min">Mind</string>
+    <string name="end">Endurance</string>
+    <string name="str">Strength</string>
+    <string name="dex">Dexterity</string>
+    <string name="intel">Intelligence</string>
+    <string name="fai">Faith</string>
+    <string name="arc">Arcane</string>
+    <string name="lev">Level</string>
+    <string name="clss">Class</string>
+    <string-array name="class_array">
+        <item>Vagabond</item>
+        <item>Warrior</item>
+        <item>Hero</item>
+        <item>Bandit</item>
+        <item>Astrologer</item>
+        <item>Prophet</item>
+        <item>Samurai</item>
+        <item>Prisoner</item>
+        <item>Confessor</item>
+        <item>Wretch</item>
+    </string-array>
+</resources>
+
