@@ -68,28 +68,6 @@ public class AsyncApiGrabbler extends AsyncTask<Object, Void, Object> {
 }
 */
 
-/*
-1: Make a method to fill all spinners with the weapon list ---Done!!!---
-2: Make on selected stat check method to ensure stats are met.
-3: UI text elements displaying stat requirements. Change color based on if stats are met or not
-4: Begin reformatting weaponmanager and spinnerfiller to support acquisition of armor, talismans,
-    and spells. Add a load screen on launch since everything gets preloaded.
-5: Allow the screen to scroll. Add containers for all other things.
-6: Add an effects window for talismans and armor, allow them to effect stats w/ color coding
-7: Add stats screen. Allow base stats to increase other stats.
-8: Create build saving system
-9: Ui overhaul
-10: Beta Release!
- */
-
-
-/*
-Bugs 2 Fix/Optimizationss!!
--stats can go over 99
--rework buttons at same time to be 1 method
- */
-
-
 
 
 

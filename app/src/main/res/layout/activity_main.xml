@@ -449,44 +449,53 @@
         android:id="@+id/strR1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="461dp"
-        android:layout_marginEnd="200dp"
+        android:layout_marginTop="464dp"
+        android:layout_marginEnd="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/dexR1"
+        android:id="@+id/strL1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="461dp"
-        android:layout_marginEnd="160dp"
+        android:layout_marginTop="464dp"
+        android:layout_marginEnd="236dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/intelR1"
+        android:id="@+id/strL2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="461dp"
-        android:layout_marginEnd="120dp"
+        android:layout_marginTop="510dp"
+        android:layout_marginEnd="236dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/faiR1"
+        android:id="@+id/strL3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="461dp"
-        android:layout_marginEnd="80dp"
+        android:layout_marginTop="556dp"
+        android:layout_marginEnd="236dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/arcR1"
+        android:id="@+id/strR2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="461dp"
-        android:layout_marginEnd="35dp"
+        android:layout_marginTop="510dp"
+        android:layout_marginEnd="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/strR3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="556dp"
+        android:layout_marginEnd="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

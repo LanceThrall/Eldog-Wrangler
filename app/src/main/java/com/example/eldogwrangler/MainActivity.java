@@ -2,9 +2,9 @@ package com.example.eldogwrangler;
 
 import static androidx.constraintlayout.motion.utils.Oscillator.TAG;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,13 +19,7 @@ import android.widget.TextView;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.net.ssl.HttpsURLConnection;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     @Override
@@ -85,6 +79,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         wSpinnerL2.setAdapter(weaponSpinnerArray);
         wSpinnerL3.setAdapter(weaponSpinnerArray);
         wSpinnerR1.setOnItemSelectedListener((AdapterView.OnItemSelectedListener) this);
+        wSpinnerR2.setOnItemSelectedListener((AdapterView.OnItemSelectedListener) this);
+        wSpinnerR3.setOnItemSelectedListener((AdapterView.OnItemSelectedListener) this);
+        wSpinnerL1.setOnItemSelectedListener((AdapterView.OnItemSelectedListener) this);
+        wSpinnerL2.setOnItemSelectedListener((AdapterView.OnItemSelectedListener) this);
+        wSpinnerL3.setOnItemSelectedListener((AdapterView.OnItemSelectedListener) this);
 
     }
 
@@ -92,6 +91,29 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String cname = (String) parent.getItemAtPosition(position);
         Log.i(TAG, cname);
+        Log.i(TAG, String.valueOf(parent));
+        //set spinId so stat reqs can display to correct textview
+        int spinID = 0;
+        String pId = String.valueOf(parent);
+        if(pId.contains("spinr1")) {
+            spinID = 1;
+        }
+        if(pId.contains("spinr2")) {
+            spinID = 2;
+        }
+        if(pId.contains("spinr3")) {
+            spinID = 3;
+        }
+        if(pId.contains("spinl1")) {
+            spinID = 4;
+        }
+        if(pId.contains("spinl2")) {
+            spinID = 5;
+        }
+        if(pId.contains("spinl3")) {
+            spinID = 6;
+        }
+
         if(cname.contains("Vagabond")||cname.contains("Warrior")||cname.contains("Hero")||cname.contains("Bandit")||cname.contains("Astrologer")||cname.contains("prophet")||
                 cname.contains("Samurai")||cname.contains("Confessor")||cname.contains("Prisoner")||cname.contains("Wretch")) {
             try {
@@ -118,10 +140,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 try {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB/*HONEYCOMB = 11*/) {
                         JSONArray statReqs = new AsyncGearManager(cname).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
-                        setStatReqs(statReqs);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            setStatReqs(statReqs, spinID);
+                        }
                     } else {
                         JSONArray statReqs = new AsyncGearManager(cname).execute().get();
-                        setStatReqs(statReqs);
+                        setStatReqs(statReqs, spinID);
                     }
                 } catch (ExecutionException e) {
                     e.printStackTrace();
@@ -420,36 +444,62 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         });
     }
 
-
-    public void setStatReqs(JSONArray statReqs) {
+    public void setStatReqs(JSONArray statReqs, Integer spinID) {
         Log.i(TAG, "Setting Stat Reqs");
-        final TextView strR1 = findViewById(R.id.strR1);
-        final TextView dexR1 = findViewById(R.id.dexR1);
-        final TextView intelR1 = findViewById(R.id.intelR1);
-        final TextView faiR1 = findViewById(R.id.faiR1);
-        final TextView arcR1 = findViewById(R.id.arcR1);
+        TextView strR1 = null;
+        if(spinID==1) {
+             strR1 = findViewById(R.id.strR1);
+        }
+        if(spinID==2) {
+            strR1 = findViewById(R.id.strR2);
+        }
+        if(spinID==3) {
+            strR1 = findViewById(R.id.strR3);
+        }
+        if(spinID==4) {
+            strR1 = findViewById(R.id.strL1);
+        }
+        if(spinID==5) {
+            strR1 = findViewById(R.id.strL2);
+        }
+        if(spinID==6) {
+            strR1 = findViewById(R.id.strL3);
+        }
+        strR1.setText(" ");
+        String reqs = null;
         for(int x=0; x<statReqs.size(); x++) {
+            if(x==0) {
+                reqs = " ";
+            }
             JSONObject thisReq = (JSONObject) statReqs.get(x);
             if(thisReq.get("name").equals("Str")) {
-                strR1.setText(String.valueOf(thisReq.get("amount")));
+                reqs = reqs + " Str: " + String.valueOf(thisReq.get("amount"));
+                strR1.setText(reqs);
             }
             if(thisReq.get("name").equals("Dex")) {
-                dexR1.setText(String.valueOf(thisReq.get("amount")));
+                reqs = reqs + " Dex: " + String.valueOf(thisReq.get("amount"));
+                strR1.setText(reqs);
             }
             if(thisReq.get("name").equals("Int")) {
-                intelR1.setText(String.valueOf(thisReq.get("amount")));
+                if((Long) thisReq.get("amount")>=1) {
+                    reqs = reqs + " Int: " + String.valueOf(thisReq.get("amount"));
+                    strR1.setText(reqs);
+                }
+                //some api entries have int with a blank value and an unnamed requirement with the int value
+                else {
+                    Log.i(TAG, "blank int req");
+                    thisReq = (JSONObject) statReqs.get(x+1);
+                    reqs = reqs + " Int: " + String.valueOf(thisReq.get("amount"));
+                    strR1.setText(reqs);
+                }
             }
-
-            //some api entries have int with a blank value and an unnamed requirement with the int value
-            if(thisReq.get("name").equals(" ")) {
-                intelR1.setText(String.valueOf(thisReq.get("amount")));
-            }
-
             if(thisReq.get("name").equals("Fai")) {
-                faiR1.setText(String.valueOf(thisReq.get("amount")));
+                reqs = reqs + " Fai: " + String.valueOf(thisReq.get("amount"));
+                strR1.setText(reqs);
             }
             if(thisReq.get("name").equals("Arc")) {
-                arcR1.setText(String.valueOf(thisReq.get("amount")));
+                reqs = reqs + " Arc: " + String.valueOf(thisReq.get("amount"));
+                strR1.setText(reqs);
             }
         }
     }
