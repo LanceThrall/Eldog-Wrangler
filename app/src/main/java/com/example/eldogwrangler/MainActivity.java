@@ -27,16 +27,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //app crash button
-        final Button networkButton = findViewById(R.id.killButton);
-        networkButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int death = 1;
-                death = death/0;
-            }
-        });
-
         //set class spinner
         Spinner spinner = (Spinner) findViewById(R.id.cspinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -45,18 +35,37 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener((AdapterView.OnItemSelectedListener) this);
 
-        //set weapon spinners
+        //set spinners
         JSONArray weaponBlock = new JSONArray();
-        String[] spinnerList = new String[376];
+        String[] spinnerList = new String[377];
+
+        JSONArray armorBlock = new JSONArray();
+        String[] armSpinnerList = new String[204];
+        String[] helmSpinnerList = new String[168];
+        String[] gauntSpinnerList = new String[94];
+        String[] legSpinnerList = new String[105];
+
+        JSONArray talismanBlock = new JSONArray();
+
+        JSONArray spellBlock = new JSONArray();
         try {
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB/*HONEYCOMB = 11*/){
-                weaponBlock = new AsyncWeaponManager().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
+                //get weapon list
+                weaponBlock = new AsyncWeaponManager("1").executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
                 Log.i(TAG, weaponBlock.toJSONString());
-                spinnerList = new AsyncSpinnerFiller(weaponBlock).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
+                spinnerList = new AsyncSpinnerFiller(weaponBlock, "1").executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
+
+                //get armor list
+                armorBlock = new AsyncWeaponManager("2").executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
+                armSpinnerList = new AsyncSpinnerFiller(armorBlock, "2").executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
+                helmSpinnerList = new AsyncSpinnerFiller(armorBlock, "3").executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
+                gauntSpinnerList = new AsyncSpinnerFiller(armorBlock, "4").executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
+                legSpinnerList = new AsyncSpinnerFiller(armorBlock, "5").executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
+
             }
             else {
-                weaponBlock = new AsyncWeaponManager().execute().get();
-                spinnerList = new AsyncSpinnerFiller(weaponBlock).execute().get();
+                weaponBlock = new AsyncWeaponManager("1").execute().get();
+                armSpinnerList = new AsyncSpinnerFiller(weaponBlock, "1").execute().get();
             }
         } catch (ExecutionException e) {
             e.printStackTrace();
@@ -64,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             e.printStackTrace();
         }
 
+        //set weapon spinners
         Spinner wSpinnerR1 = (Spinner) findViewById(R.id.spinr1);
         Spinner wSpinnerR2 = (Spinner) findViewById(R.id.spinr2);
         Spinner wSpinnerR3 = (Spinner) findViewById(R.id.spinr3);
@@ -84,6 +94,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         wSpinnerL1.setOnItemSelectedListener((AdapterView.OnItemSelectedListener) this);
         wSpinnerL2.setOnItemSelectedListener((AdapterView.OnItemSelectedListener) this);
         wSpinnerL3.setOnItemSelectedListener((AdapterView.OnItemSelectedListener) this);
+
+        //set armor spinners
+        Spinner aSpinner1 = (Spinner) findViewById(R.id.spina1);
+        Spinner aSpinner2 = (Spinner) findViewById(R.id.spina2);
+        Spinner aSpinner3 = (Spinner) findViewById(R.id.spina3);
+        Spinner aSpinner4 = (Spinner) findViewById(R.id.spina4);
+        ArrayAdapter<String> armorSpinnerArray = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, armSpinnerList);
+        ArrayAdapter<String> helmetSpinnerArray = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, helmSpinnerList);
+        ArrayAdapter<String> gauntSpinnerArray = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, gauntSpinnerList);
+        ArrayAdapter<String> legSpinnerArray = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, legSpinnerList);
+        aSpinner1.setAdapter(helmetSpinnerArray);
+        aSpinner2.setAdapter(armorSpinnerArray);
+        aSpinner3.setAdapter(gauntSpinnerArray);
+        aSpinner4.setAdapter(legSpinnerArray);
+
 
     }
 
@@ -134,6 +159,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         else {
             if(cname.equals(" ")) {
                 Log.i(TAG, "nothing selected");
+                JSONArray emptyStatReq = null;
+                setStatReqs(emptyStatReq, spinID);
             }
             else {
                 Log.i(TAG, "searching gear reqs");
@@ -222,10 +249,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                vigor.increment();
-                final TextView vigorBox = findViewById(R.id.vigBox);
-                vigorBox.setText(Integer.toString(vigor.getValue()));
                 if(vigor.getValue()<99) {
+                    vigor.increment();
+                    final TextView vigorBox = findViewById(R.id.vigBox);
+                    vigorBox.setText(Integer.toString(vigor.getValue()));
                     level.increment();
                     final TextView levelBox = findViewById(R.id.level);
                     levelBox.setText(Integer.toString(level.getValue()));
@@ -250,10 +277,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         button3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mind.increment();
-                final TextView mindBox = findViewById(R.id.minBox);
-                mindBox.setText(Integer.toString(mind.getValue()));
                 if(mind.getValue()<99) {
+                    mind.increment();
+                    final TextView mindBox = findViewById(R.id.minBox);
+                    mindBox.setText(Integer.toString(mind.getValue()));
                     level.increment();
                     final TextView levelBox = findViewById(R.id.level);
                     levelBox.setText(Integer.toString(level.getValue()));
@@ -278,10 +305,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         button5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                endurance.increment();
-                final TextView enduranceBox = findViewById(R.id.endBox);
-                enduranceBox.setText(Integer.toString(endurance.getValue()));
                 if(endurance.getValue()<99) {
+                    endurance.increment();
+                    final TextView enduranceBox = findViewById(R.id.endBox);
+                    enduranceBox.setText(Integer.toString(endurance.getValue()));
                     level.increment();
                     final TextView levelBox = findViewById(R.id.level);
                     levelBox.setText(Integer.toString(level.getValue()));
@@ -306,10 +333,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         button7.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                strength.increment();
-                final TextView strengthBox = findViewById(R.id.strBox);
-                strengthBox.setText(Integer.toString(strength.getValue()));
                 if(strength.getValue()<99) {
+                    strength.increment();
+                    final TextView strengthBox = findViewById(R.id.strBox);
+                    strengthBox.setText(Integer.toString(strength.getValue()));
                     level.increment();
                     final TextView levelBox = findViewById(R.id.level);
                     levelBox.setText(Integer.toString(level.getValue()));
@@ -334,10 +361,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         button9.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dexterity.increment();
-                final TextView dexterityBox = findViewById(R.id.dexBox);
-                dexterityBox.setText(Integer.toString(dexterity.getValue()));
                 if(dexterity.getValue()<99) {
+                    dexterity.increment();
+                    final TextView dexterityBox = findViewById(R.id.dexBox);
+                    dexterityBox.setText(Integer.toString(dexterity.getValue()));
                     level.increment();
                     final TextView levelBox = findViewById(R.id.level);
                     levelBox.setText(Integer.toString(level.getValue()));
@@ -362,10 +389,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         button11.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                intelligence.increment();
-                final TextView intelligenceBox = findViewById(R.id.intelBox);
-                intelligenceBox.setText(Integer.toString(intelligence.getValue()));
                 if(intelligence.getValue()<99) {
+                    intelligence.increment();
+                    final TextView intelligenceBox = findViewById(R.id.intelBox);
+                    intelligenceBox.setText(Integer.toString(intelligence.getValue()));
                     level.increment();
                     final TextView levelBox = findViewById(R.id.level);
                     levelBox.setText(Integer.toString(level.getValue()));
@@ -390,10 +417,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         button13.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                faith.increment();
-                final TextView faithBox = findViewById(R.id.faiBox);
-                faithBox.setText(Integer.toString(faith.getValue()));
                 if(faith.getValue()<99) {
+                    faith.increment();
+                    final TextView faithBox = findViewById(R.id.faiBox);
+                    faithBox.setText(Integer.toString(faith.getValue()));
                     level.increment();
                     final TextView levelBox = findViewById(R.id.level);
                     levelBox.setText(Integer.toString(level.getValue()));
@@ -418,10 +445,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         button15.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                arcane.increment();
-                final TextView arcaneBox = findViewById(R.id.arcBox);
-                arcaneBox.setText(Integer.toString(arcane.getValue()));
                 if(arcane.getValue()<99) {
+                    arcane.increment();
+                    final TextView arcaneBox = findViewById(R.id.arcBox);
+                    arcaneBox.setText(Integer.toString(arcane.getValue()));
                     level.increment();
                     final TextView levelBox = findViewById(R.id.level);
                     levelBox.setText(Integer.toString(level.getValue()));
@@ -467,39 +494,44 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
         strR1.setText(" ");
         String reqs = null;
-        for(int x=0; x<statReqs.size(); x++) {
-            if(x==0) {
-                reqs = " ";
-            }
-            JSONObject thisReq = (JSONObject) statReqs.get(x);
-            if(thisReq.get("name").equals("Str")) {
-                reqs = reqs + " Str: " + String.valueOf(thisReq.get("amount"));
-                strR1.setText(reqs);
-            }
-            if(thisReq.get("name").equals("Dex")) {
-                reqs = reqs + " Dex: " + String.valueOf(thisReq.get("amount"));
-                strR1.setText(reqs);
-            }
-            if(thisReq.get("name").equals("Int")) {
-                if((Long) thisReq.get("amount")>=1) {
-                    reqs = reqs + " Int: " + String.valueOf(thisReq.get("amount"));
+        if (statReqs == null) {
+            strR1.setText(" ");
+        }
+        else {
+            for (int x = 0; x < statReqs.size(); x++) {
+                if (x == 0) {
+                    reqs = " ";
+                }
+                JSONObject thisReq = (JSONObject) statReqs.get(x);
+                if (thisReq.get("name").equals("Str")) {
+                    reqs = reqs + " Str: " + String.valueOf(thisReq.get("amount"));
                     strR1.setText(reqs);
                 }
-                //some api entries have int with a blank value and an unnamed requirement with the int value
-                else {
-                    Log.i(TAG, "blank int req");
-                    thisReq = (JSONObject) statReqs.get(x+1);
-                    reqs = reqs + " Int: " + String.valueOf(thisReq.get("amount"));
+                if (thisReq.get("name").equals("Dex")) {
+                    reqs = reqs + " Dex: " + String.valueOf(thisReq.get("amount"));
                     strR1.setText(reqs);
                 }
-            }
-            if(thisReq.get("name").equals("Fai")) {
-                reqs = reqs + " Fai: " + String.valueOf(thisReq.get("amount"));
-                strR1.setText(reqs);
-            }
-            if(thisReq.get("name").equals("Arc")) {
-                reqs = reqs + " Arc: " + String.valueOf(thisReq.get("amount"));
-                strR1.setText(reqs);
+                if (thisReq.get("name").equals("Int")) {
+                    if ((Long) thisReq.get("amount") >= 1) {
+                        reqs = reqs + " Int: " + String.valueOf(thisReq.get("amount"));
+                        strR1.setText(reqs);
+                    }
+                    //some api entries have int with a blank value and an unnamed requirement with the int value
+                    else {
+                        Log.i(TAG, "blank int req");
+                        thisReq = (JSONObject) statReqs.get(x + 1);
+                        reqs = reqs + " Int: " + String.valueOf(thisReq.get("amount"));
+                        strR1.setText(reqs);
+                    }
+                }
+                if (thisReq.get("name").equals("Fai")) {
+                    reqs = reqs + " Fai: " + String.valueOf(thisReq.get("amount"));
+                    strR1.setText(reqs);
+                }
+                if (thisReq.get("name").equals("Arc")) {
+                    reqs = reqs + " Arc: " + String.valueOf(thisReq.get("amount"));
+                    strR1.setText(reqs);
+                }
             }
         }
     }
