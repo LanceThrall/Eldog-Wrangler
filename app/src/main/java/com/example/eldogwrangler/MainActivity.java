@@ -46,26 +46,43 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         String[] legSpinnerList = new String[105];
 
         JSONArray talismanBlock = new JSONArray();
+        String[] talSpinnerList = new String[88];
 
         JSONArray spellBlock = new JSONArray();
+        String[] spelSpinnerList = new String [170];
         try {
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB/*HONEYCOMB = 11*/){
                 //get weapon list
-                weaponBlock = new AsyncWeaponManager("1").executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
-                Log.i(TAG, weaponBlock.toJSONString());
+                weaponBlock = new AsyncGearGrabber("1").executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
                 spinnerList = new AsyncSpinnerFiller(weaponBlock, "1").executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
 
                 //get armor list
-                armorBlock = new AsyncWeaponManager("2").executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
+                armorBlock = new AsyncGearGrabber("2").executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
                 armSpinnerList = new AsyncSpinnerFiller(armorBlock, "2").executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
                 helmSpinnerList = new AsyncSpinnerFiller(armorBlock, "3").executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
                 gauntSpinnerList = new AsyncSpinnerFiller(armorBlock, "4").executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
                 legSpinnerList = new AsyncSpinnerFiller(armorBlock, "5").executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
 
+                //get talisman list
+                talismanBlock = new AsyncGearGrabber("3").executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
+                talSpinnerList = new AsyncSpinnerFiller(talismanBlock, "6").executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
+
+                //get spell list
+                spellBlock = new AsyncGearGrabber("4").executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
+                spelSpinnerList = new AsyncSpinnerFiller(spellBlock, "7").executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
             }
             else {
-                weaponBlock = new AsyncWeaponManager("1").execute().get();
-                armSpinnerList = new AsyncSpinnerFiller(weaponBlock, "1").execute().get();
+                weaponBlock = new AsyncGearGrabber("1").execute().get();
+                spinnerList = new AsyncSpinnerFiller(weaponBlock, "1").execute().get();
+                armorBlock = new AsyncGearGrabber("2").execute().get();
+                armSpinnerList = new AsyncSpinnerFiller(armorBlock, "2").execute().get();
+                helmSpinnerList = new AsyncSpinnerFiller(armorBlock, "3").execute().get();
+                gauntSpinnerList = new AsyncSpinnerFiller(armorBlock, "4").execute().get();
+                legSpinnerList = new AsyncSpinnerFiller(armorBlock, "5").execute().get();
+                talismanBlock = new AsyncGearGrabber("3").execute().get();
+                talSpinnerList = new AsyncSpinnerFiller(talismanBlock, "6").execute().get();
+                spellBlock = new AsyncGearGrabber("4").execute().get();
+                spelSpinnerList = new AsyncSpinnerFiller(spellBlock, "7").execute().get();
             }
         } catch (ExecutionException e) {
             e.printStackTrace();
@@ -101,15 +118,53 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Spinner aSpinner3 = (Spinner) findViewById(R.id.spina3);
         Spinner aSpinner4 = (Spinner) findViewById(R.id.spina4);
         ArrayAdapter<String> armorSpinnerArray = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, armSpinnerList);
+        armorSpinnerArray.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ArrayAdapter<String> helmetSpinnerArray = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, helmSpinnerList);
+        helmetSpinnerArray.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ArrayAdapter<String> gauntSpinnerArray = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, gauntSpinnerList);
+        gauntSpinnerArray.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ArrayAdapter<String> legSpinnerArray = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, legSpinnerList);
+        legSpinnerArray.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         aSpinner1.setAdapter(helmetSpinnerArray);
         aSpinner2.setAdapter(armorSpinnerArray);
         aSpinner3.setAdapter(gauntSpinnerArray);
         aSpinner4.setAdapter(legSpinnerArray);
 
+        //set talisman spinners
+        Spinner tSpinner1 = (Spinner) findViewById(R.id.tspin1);
+        Spinner tSpinner2 = (Spinner) findViewById(R.id.tspin2);
+        Spinner tSpinner3 = (Spinner) findViewById(R.id.tspin3);
+        Spinner tSpinner4 = (Spinner) findViewById(R.id.tspin4);
+        ArrayAdapter<String> talismanSpinnerArray = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, talSpinnerList);
+        talismanSpinnerArray.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        tSpinner1.setAdapter(talismanSpinnerArray);
+        tSpinner2.setAdapter(talismanSpinnerArray);
+        tSpinner3.setAdapter(talismanSpinnerArray);
+        tSpinner4.setAdapter(talismanSpinnerArray);
 
+        //set spell spinners
+        Spinner sSpinner1 = (Spinner) findViewById(R.id.sspin1);
+        Spinner sSpinner2 = (Spinner) findViewById(R.id.sspin2);
+        Spinner sSpinner3 = (Spinner) findViewById(R.id.sspin3);
+        Spinner sSpinner4 = (Spinner) findViewById(R.id.sspin4);
+        Spinner sSpinner5 = (Spinner) findViewById(R.id.sspin5);
+        Spinner sSpinner6 = (Spinner) findViewById(R.id.sspin6);
+        Spinner sSpinner7 = (Spinner) findViewById(R.id.sspin7);
+        Spinner sSpinner8 = (Spinner) findViewById(R.id.sspin8);
+        Spinner sSpinner9 = (Spinner) findViewById(R.id.sspin9);
+        Spinner sSpinner10 = (Spinner) findViewById(R.id.sspin10);
+        ArrayAdapter<String> spellSpinnerArray = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spelSpinnerList);
+        spellSpinnerArray.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sSpinner1.setAdapter(spellSpinnerArray);
+        sSpinner2.setAdapter(spellSpinnerArray);
+        sSpinner3.setAdapter(spellSpinnerArray);
+        sSpinner4.setAdapter(spellSpinnerArray);
+        sSpinner5.setAdapter(spellSpinnerArray);
+        sSpinner6.setAdapter(spellSpinnerArray);
+        sSpinner7.setAdapter(spellSpinnerArray);
+        sSpinner8.setAdapter(spellSpinnerArray);
+        sSpinner9.setAdapter(spellSpinnerArray);
+        sSpinner10.setAdapter(spellSpinnerArray);
     }
 
     @Override

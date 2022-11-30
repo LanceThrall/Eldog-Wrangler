@@ -38,6 +38,12 @@ public class AsyncSpinnerFiller extends AsyncTask<JSONArray, Void, String[]> {
         if(thisMode.contains("5")) {
             return makeLegList();
         }
+        if(thisMode.contains("6")) {
+            return makeTalList();
+        }
+        if(thisMode.contains("7")) {
+            return makeSpelList();
+        }
         return makeNoList();
     }
     private String[] makeWeaponList() {
@@ -107,6 +113,27 @@ public class AsyncSpinnerFiller extends AsyncTask<JSONArray, Void, String[]> {
                 spinnerList[armorCount+1] = (String) thisName.get("name");
                 armorCount++;
             }
+        }
+        return spinnerList;
+    }
+    private String[] makeTalList() {
+        String[] spinnerList = new String[88];
+        JSONArray names = getjName();
+        spinnerList[0] = " ";
+        for(int x = 1; x<88; x++) {
+            JSONObject thisName = (JSONObject) names.get(x-1);
+            spinnerList[x] = (String) thisName.get("name");
+        }
+        return spinnerList;
+    }
+
+    private String[] makeSpelList() {
+        String[] spinnerList = new String[170];
+        JSONArray names = getjName();
+        spinnerList[0] = " ";
+        for(int x = 1; x<170; x++) {
+            JSONObject thisName = (JSONObject) names.get(x-1);
+            spinnerList[x] = (String) thisName.get("name");
         }
         return spinnerList;
     }
